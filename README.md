@@ -1,7 +1,5 @@
 # webler-group
 
-# Progress
-
-## <DD>
+## DD
 
 - [ ] Create config.php
