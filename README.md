@@ -2,4 +2,4 @@
 
 ## DD
 
-- [ ] Create config.php
+- [x] Create config.php
