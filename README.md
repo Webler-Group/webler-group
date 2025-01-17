@@ -5,7 +5,7 @@
 - [x] Create config.php
 - [ ] Create Header as part of Webler feature
 - [ ] Create Footer as part of Webler feature
-- [ ] Document Ubuntu installation
+- [x] Document Ubuntu installation
 - [ ] Document Windows installation
 
 ## Structure
