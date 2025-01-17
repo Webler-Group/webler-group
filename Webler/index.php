@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webler Group</title>
-    <link rel="stylesheet" href="../Webler/css/header.css">
-    <link rel="stylesheet" href="../Webler/css/footer.css">
+    <?php include '../Webler/includes/css.php'; ?>
     <style>
     </style>
 </head>
@@ -18,6 +17,6 @@
 
     <?php include '../Webler/partials/footer.php'; ?>
 
-    <script src="../Webler/js/header.js"></script>
+    <?php include '../Webler/includes/js.php'; ?>
 </body>
 </html>

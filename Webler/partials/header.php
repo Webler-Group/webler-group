@@ -30,7 +30,7 @@ if ($handle = opendir($baseDir)) {
 
 <nav>
     <div class="nav-container">
-        <img src="/Webler/images/logo.png" alt="Webler Logo" class="logo">
+        <img src="/Webler/assets/images/logo.png" alt="Webler Logo" class="logo">
         <div class="nav-toggle">Menu</div>
     </div>
     <ul>
