@@ -1,5 +1,13 @@
 # webler-group
 
+## TODO
+
+- [x] Create config.php
+- [ ] Create Header as part of Webler feature
+- [ ] Create Footer as part of WEbler feature
+- [ ] Document Ubuntu installation
+- [ ] Document Windows installation
+
 ## Structure
 
 ```
@@ -81,10 +89,28 @@ systemctl status mariadb
 
 You should see green text saying enabled, active (running).
 
-## TODO
+MariaDB comes without password with the default root user, as a result only the privileged user can access mariadb. Secure mariadb with root password and remove anonymous users:
 
-- [x] Create config.php
-- [ ] Create Header as part of Webler feature
-- [ ] Create Footer as part of WEbler feature
-- [ ] Document Ubuntu installation
-- [ ] Document Windows installation
+```
+sudo mysql_secure_installation
+```
+
+`Enter current password for root (enter for none):` Press Enter
+
+`Switch to unix_socket authentication [Y/n]` Press n
+
+`Change the root password? [Y/n] ` Press Y and enter new root password
+
+`Remove anonymous users? [Y/n]` Press Y
+
+`Disallow root login remotely? [Y/n]` Press Y
+
+`Remove test database and access to it? [Y/n]` Press Y
+
+`Reload privilege tables now? [Y/n]` Press Y
+
+Now you can access mariadb from command line:
+
+```
+mariadb -u root -p
+```
