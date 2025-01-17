@@ -72,6 +72,44 @@ You should see green text saying enabled, active (running).
 
 **Create virtual host for Webler**
 
+Craete configuration file:
+
+```
+sudo nano /etc/apache2/sites-available/webler.com.conf
+```
+
+Add the following and set the DocumentRoot based on your location of the github project:
+
+```
+<VirtualHost *:80>
+  ServerAdmin webmaster@webler.com
+  ServerName webler.com
+  ServerAlias www.webler.com
+  DocumentRoot /path/to/project
+  ErrorLog ${APACHE_LOG_DIR}/webler.com_error.log
+  CustomLog ${APACHE_LOG_DIR}/webler.com_access.log combined
+</VirtualHost>
+```
+
+Enable the virtual host:
+
+```
+sudo a2ensite webler.com.conf
+sudo systemctl restart apache2
+```
+
+Edit your /etc/hosts to point the domain to your ip address:
+
+```
+sudo nano /etc/hosts
+```
+
+Add the following:
+
+```
+127.0.0.1 webler.com
+```
+
 TODO
 
 #### MariaDB
