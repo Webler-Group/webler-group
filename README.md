@@ -15,13 +15,14 @@ Feature1/
 |--index.php   Entry point
 |--page1.php
 |--page2.php
-...
+|...
 |--classes/   Utils used in pages
-   |--class1.php
-   |--class2.php
-   ...
-|--partials/   Header, Footer, ...
-   |--partial.php
+|  |--Class1.php
+|  |--Class2.php
+|  ...
+|--partials/   header, footer, ...
+|  |--header.php
+|  |...
 ...
 config.php   Configuration for DB connection, ...
 ```
@@ -79,7 +80,13 @@ sudo apt install libapache2-mod-php
 
 First, verify if the files /etc/apache2/mods-enabled/php8.*.conf and /etc/apache2/mods-enabled/php8.*.load exist. If they do not exist, you can enable the module using the a2enmod command.
 
-Then restart the apache service.
+Ensure that the mod_rewrite module is enabled:
+
+```
+sudo a2enmod rewrite
+```
+
+Restart the apache service.
 
 **Create virtual host for Webler**
 
@@ -91,16 +98,23 @@ Craete configuration file:
 sudo nano /etc/apache2/sites-available/webler.com.conf
 ```
 
-Add the following (update the DocumentRoot value based on your location of the project):
+Add the following (update the paths according to your location of the project):
 
 ```
 <VirtualHost *:80>
-  ServerAdmin webmaster@webler.com
-  ServerName webler.com
-  ServerAlias www.webler.com
-  DocumentRoot /var/www/
-  ErrorLog ${APACHE_LOG_DIR}/webler.com_error.log
-  CustomLog ${APACHE_LOG_DIR}/webler.com_access.log combined
+   ServerAdmin webmaster@webler.com
+   ServerName webler.com
+   ServerAlias www.webler.com
+   DocumentRoot /var/www/webler-group
+
+   <Directory /var/www/webler-group>
+      AllowOverride All
+      Require all granted
+   </Directory>
+
+
+   ErrorLog ${APACHE_LOG_DIR}/webler.com_error.log
+   CustomLog ${APACHE_LOG_DIR}/webler.com_access.log combined
 </VirtualHost>
 ```
 

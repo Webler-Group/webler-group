@@ -10,7 +10,6 @@
 <body>
 
     <h1>Webler Group - Home</h1>
-    <a href="/Ephemerous">ephemerous</a>
 
 </body>
 </html>
