@@ -3,9 +3,9 @@
 $app_name = "Webler Group";
 
 $dbHost = 'localhost';
-$dbName = 'webler';
+$dbName = 'webler_localhost_db';
 $dbDSN = "mysql:host=$dbHost;dbname=$dbName;";
-$dbUser = 'root';
+$dbUser = 'webler';
 $dbPassword = 'password';
 
 ?>
