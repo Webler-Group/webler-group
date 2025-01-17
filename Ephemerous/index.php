@@ -1,9 +1,9 @@
 <?php
-require_once 'configs/config.php';         
+require_once '../config.php';         
 require_once 'classes/Ephemerous.php';         
 
 // Create Ephemerous object and connect to the database
-$ephemerousDb = new Ephemerous($dbFile);
+$ephemerousDb = new Ephemerous($dbDSN, $dbUser, $dbPassword);
 
 // If the form is submitted, insert the new message
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {

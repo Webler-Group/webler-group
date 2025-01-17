@@ -4,24 +4,25 @@ class Ephemerous {
     private $db;
 
     // Constructor to establish a database connection
-    public function __construct($dbFile) {
+    public function __construct($dbDSN, $dbUser, $dbPassword) {
         try {
             // Connect to the SQLite database
-            $this->db = new PDO('sqlite:' . $dbFile);
+            $this->db = new PDO($dbDSN , $dbUser, $dbPassword);
             // Set error mode to exceptions
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->createTable();
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }
-        $this->createTable();
     }
 
     // Method to create the table if it doesn't exist
     public function createTable() {
         $query = "
             CREATE TABLE IF NOT EXISTS ephemerous (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                message TEXT
+                id INT AUTO_INCREMENT,
+                message CHAR(255),
+                PRIMARY KEY(id)
             );
         ";
         $this->db->exec($query);
