@@ -49,7 +49,12 @@ php --version
 
 #### Apache
 
-On Ubuntu Apache2 should be installed already or you can install it via apt.
+On Ubuntu Apache2 should be installed already or you can install it:
+
+```
+sudo apt update
+sudo apt install apache2
+```
 
 Restart the Apache service:
 
@@ -64,6 +69,10 @@ systemctl status apache2
 ```
 
 You should see green text saying enabled, active (running).
+
+**Create virtual host for Webler**
+
+TODO
 
 #### MariaDB
 
