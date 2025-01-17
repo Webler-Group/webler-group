@@ -4,7 +4,7 @@
 
 - [x] Create config.php
 - [ ] Create Header as part of Webler feature
-- [ ] Create Footer as part of WEbler feature
+- [ ] Create Footer as part of Webler feature
 - [ ] Document Ubuntu installation
 - [ ] Document Windows installation
 
@@ -47,7 +47,7 @@ Then check the version:
 php --version
 ```
 
-### Apache
+#### Apache
 
 On Ubuntu Apache2 should be installed already or you can install it via apt.
 
@@ -65,7 +65,7 @@ systemctl status apache2
 
 You should see green text saying enabled, active (running).
 
-### MariaDB
+#### MariaDB
 
 Install:
 
@@ -114,3 +114,17 @@ Now you can access mariadb from command line:
 ```
 mariadb -u root -p
 ```
+
+Create Webler database:
+
+```
+MariaDB> CREATE DATABASE webler_localhost_db;
+MariaDB> SHOW DATABASES;
+```
+
+Create Webler user and grant privileges on the newly created database to the user:
+
+```
+MariaDB> CREATE USER 'webler'@'localhost' IDENTIFIED BY 'password';
+MariaDB> GRANT ALL PRIVILEGES ON webler_locahost_db.* TO 'webler'@'localhost';
+MariaDB> FLUSH PRIVILEGES;
