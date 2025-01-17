@@ -1,6 +1,6 @@
 <?php
 require_once '../config.php';         
-require_once 'classes/Ephemerous.php';         
+require_once 'classes/Ephemerous.php';        
 
 // Create Ephemerous object and connect to the database
 $ephemerousDb = new Ephemerous($dbDSN, $dbUser, $dbPassword);
@@ -20,6 +20,8 @@ $latestMessage = $ephemerousDb->get();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ephemerous Message</title>
+    <link rel="stylesheet" href="../Webler/css/header.css">
+    <link rel="stylesheet" href="../Webler/css/footer.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -67,24 +69,29 @@ $latestMessage = $ephemerousDb->get();
     </style>
 </head>
 <body>
+    <?php require '../Webler/partials/header.php'; ?>
 
-    <h1>Ephemerous Message</h1>
+    <main>
+        <h1>Ephemerous Message</h1>
 
-    <!-- Display the latest message -->
-    <div class="message-box">
-        <strong>Latest Message:</strong><br>
-        <p><?php echo htmlspecialchars($latestMessage); ?>
-        </p>
-    </div>
+        <!-- Display the latest message -->
+        <div class="message-box">
+            <strong>Latest Message:</strong><br>
+            <p><?php echo htmlspecialchars($latestMessage); ?></p>
+        </div>
 
-    <!-- Form to create a new message -->
-    <div class="form-box">
-        <h3>Create a New Message</h3>
-        <form method="post" action="">
-            <textarea name="message" rows="4" maxlength="255" placeholder="Enter your message here" required></textarea><br>
-            <button type="submit">Submit</button>
-        </form>
-    </div>
+        <!-- Form to create a new message -->
+        <div class="form-box">
+            <h3>Create a New Message</h3>
+            <form method="post" action="">
+                <textarea name="message" rows="4" maxlength="255" placeholder="Enter your message here" required></textarea><br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </main>
 
+    <?php include '../Webler/partials/footer.php'; ?>
+
+    <script src="../Webler/js/header.js"></script>
 </body>
 </html>
