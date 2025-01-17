@@ -91,14 +91,14 @@ Craete configuration file:
 sudo nano /etc/apache2/sites-available/webler.com.conf
 ```
 
-Add the following and set the DocumentRoot based on your location of the project:
+Add the following (update the DocumentRoot value based on your location of the project):
 
 ```
 <VirtualHost *:80>
   ServerAdmin webmaster@webler.com
   ServerName webler.com
   ServerAlias www.webler.com
-  DocumentRoot /path/to/project
+  DocumentRoot /var/www/
   ErrorLog ${APACHE_LOG_DIR}/webler.com_error.log
   CustomLog ${APACHE_LOG_DIR}/webler.com_access.log combined
 </VirtualHost>
@@ -123,7 +123,11 @@ Add the following:
 127.0.0.1 webler.com
 ```
 
-TODO
+If you still see the default apache site in the browser. Check /etc/apache2/sites-enabled and disable the default site and all other sites except for webler:
+
+```
+sudo a2dissite 000-default.conf
+```
 
 #### MariaDB
 
