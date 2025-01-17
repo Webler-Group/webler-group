@@ -70,7 +70,20 @@ systemctl status apache2
 
 You should see green text saying enabled, active (running).
 
+For PHP support install php module:
+
+```
+sudo apt update
+sudo apt install libapache2-mod-php
+```
+
+First, verify if the files /etc/apache2/mods-enabled/php8.*.conf and /etc/apache2/mods-enabled/php8.*.load exist. If they do not exist, you can enable the module using the a2enmod command.
+
+Then restart the apache service.
+
 **Create virtual host for Webler**
+
+Clone the project from github under /var/www which is default apache directory.
 
 Craete configuration file:
 
@@ -78,7 +91,7 @@ Craete configuration file:
 sudo nano /etc/apache2/sites-available/webler.com.conf
 ```
 
-Add the following and set the DocumentRoot based on your location of the github project:
+Add the following and set the DocumentRoot based on your location of the project:
 
 ```
 <VirtualHost *:80>
