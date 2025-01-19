@@ -37,6 +37,9 @@ When working on a feature switch to the feature branch!
 ## PHP page template
 
 ```
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,6 +63,16 @@ When working on a feature switch to the feature branch!
     <?php include '../Webler/includes/js.php'; ?>
 </body>
 </html>
+```
+
+## CLI
+
+CLI scripts are located in /Webler/cli.
+
+Run install.php before you open the site, this will create required tables and seed default data.
+
+```
+php ./Webler/cli/install.php
 ```
 
 ## Installation

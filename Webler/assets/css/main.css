@@ -13,6 +13,9 @@ header {
     padding: 10px;
     height: 80px;
     border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 header .logo-wrapper {
@@ -72,4 +75,27 @@ footer {
     /* Optional: Fixes footer at the bottom */
     bottom: 0;
     left: 0;
+}
+
+/* User */
+
+.user-main {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+    text-align: center;
+}
+
+.user-info h1 {
+    font-size: 2em;
+    color: #333;
+}
+
+.user-info p {
+    font-size: 1.2em;
+    color: #666;
 }

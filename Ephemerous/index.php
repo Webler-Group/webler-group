@@ -1,17 +1,19 @@
 <?php
-require_once '../config.php';         
-require_once 'classes/Ephemerous.php';        
+session_start();
+
+require_once __DIR__. '/../config.php'; 
+require_once __DIR__ . '/classes/EphemerousController.php';        
 
 // Create Ephemerous object and connect to the database
-$ephemerousDb = new Ephemerous($dbDSN, $dbUser, $dbPassword);
+$ephemerousController = new EphemerousController($dbDSN, $dbUser, $dbPassword);
 
 // If the form is submitted, insert the new message
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {
-    $ephemerousDb->insert($_POST['message']);
+    $ephemerousController->insert($_POST['message']);
 }
 
 // Fetch the latest message from the database
-$latestMessage = $ephemerousDb->get();
+$latestMessage = $ephemerousController->get();
 ?>
 
 <!DOCTYPE html>

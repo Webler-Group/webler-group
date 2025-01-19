@@ -1,20 +1,8 @@
 <?php
 
-class Ephemerous {
-    private $db;
+require_once __DIR__ . '/../../Webler/classes/Controller.php';
 
-    // Constructor to establish a database connection
-    public function __construct($dbDSN, $dbUser, $dbPassword) {
-        try {
-            // Connect to the SQLite database
-            $this->db = new PDO($dbDSN , $dbUser, $dbPassword);
-            // Set error mode to exceptions
-            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->createTable();
-        } catch (PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
-        }
-    }
+class EphemerousController extends Controller {
 
     // Method to create the table if it doesn't exist
     public function createTable() {
