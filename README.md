@@ -34,6 +34,34 @@ config.php   Configuration for DB connection, ...
 
 When working on a feature switch to the feature branch!
 
+## PHP page template
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webler Group</title>
+    <?php include '../Webler/includes/css.php'; ?>
+</head>
+<body>
+    <?php include '../Webler/partials/header.php'; ?>
+
+    <div class="content-wrapper">
+        <?php include '../Webler/partials/navbar.php'; ?>
+        <main>
+            <!-- content goes here -->
+        </main>
+    </div>
+
+    <?php include '../Webler/partials/footer.php'; ?>
+
+    <?php include '../Webler/includes/js.php'; ?>
+</body>
+</html>
+```
+
 ## Installation
 
 ### Ubuntu
