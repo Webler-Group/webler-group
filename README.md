@@ -209,5 +209,5 @@ Create Webler user and grant privileges on the newly created database to the use
 
 ```
 MariaDB> CREATE USER 'webler'@'localhost' IDENTIFIED BY 'password';
-MariaDB> GRANT ALL PRIVILEGES ON webler_locahost_db.* TO 'webler'@'localhost';
+MariaDB> GRANT ALL PRIVILEGES ON webler_localhost_db.* TO 'webler'@'localhost';
 MariaDB> FLUSH PRIVILEGES;
