@@ -3,8 +3,8 @@
 ## TODO
 
 - [x] Create config.php
-- [ ] Create Header as part of Webler feature
-- [ ] Create Footer as part of Webler feature
+- [x] Create Header as part of Webler feature
+- [x] Create Footer as part of Webler feature
 - [x] Document Ubuntu installation
 - [ ] Document Windows installation
 
