@@ -10,13 +10,13 @@ abstract class Controller {
             $this->db = new PDO($dbDSN , $dbUser, $dbPassword);
             // Set error mode to exceptions
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->createTable();
+            $this->init();
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }
     }
 
-    protected abstract function createTable();
+    protected abstract function init();
 }
 
 ?>

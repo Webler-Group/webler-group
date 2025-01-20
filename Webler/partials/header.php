@@ -1,18 +1,18 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../classes/AuthController.php';
+require_once __DIR__ . '/../classes/UserController.php';
 
-$authController = new AuthController($dbDSN, $dbUser, $dbPassword);
+$UserController = new UserController($dbDSN, $dbUser, $dbPassword);
 
 if (isset($_POST['action'])) {
     switch ($_POST['action']) {
         case 'logout':
-            $authController->logout();
+            $UserController->logout();
             break;
         case 'login':
             if (!empty($_POST['email']) && !empty($_POST['password'])) {
-                $authController->login($_POST['email'], $_POST['password']);
+                $UserController->login($_POST['email'], $_POST['password']);
             }
             break;
     }
@@ -25,7 +25,7 @@ if (isset($_POST['action'])) {
 
     <?php if (isset($_SESSION['user_id'])): ?>
         <form method="post">
-            <a href="/Webler/user.php">Profile</a>
+            <a href="/Webler/profile.php">Profile</a>
             <button type="submit" name="action" value="logout">Logout</button>
         </form>
     <?php else: ?>

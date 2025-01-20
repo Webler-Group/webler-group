@@ -24,6 +24,22 @@ try {
     $pdo->exec($sql);
     echo "Table 'users' created or already exists.\n";
 
+    // Check and add new columns if they do not exist
+    $addColumnSql = function($columnName, $columnDefinition) use ($pdo) {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS 
+                              WHERE TABLE_NAME = 'users' AND COLUMN_NAME = :columnName");
+        $stmt->execute([':columnName' => $columnName]);
+        if ($stmt->fetchColumn() == 0) {
+            $pdo->exec("ALTER TABLE users ADD $columnDefinition");
+            echo "Column '$columnName' added.\n";
+        } else {
+            echo "Column '$columnName' already exists.\n";
+        }
+    };
+
+    $addColumnSql('name', "name VARCHAR(255)");
+    $addColumnSql('is_active', "is_active TINYINT(1) NOT NULL DEFAULT 1");
+
     // Check if an admin user already exists
     $query = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
     $query->execute([':email' => $adminEmail]);
@@ -44,6 +60,15 @@ try {
     } else {
         echo "Admin account already exists.\n";
     }
+
+    // Update the admin user's name to WeblerCodes
+    $updateName = $pdo->prepare("UPDATE users SET name = :name WHERE email = :email");
+    $updateName->execute([
+        ':name' => 'WeblerCodes',
+        ':email' => $adminEmail
+    ]);
+
+    echo "Admin name set to WeblerCodes.\n";
 
 } catch (\PDOException $e) {
     // Handle connection errors

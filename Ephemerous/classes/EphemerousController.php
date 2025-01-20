@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../Webler/classes/Controller.php';
 class EphemerousController extends Controller {
 
     // Method to create the table if it doesn't exist
-    public function createTable() {
+    public function init() {
         $query = "
             CREATE TABLE IF NOT EXISTS ephemerous (
                 id INT AUTO_INCREMENT,
