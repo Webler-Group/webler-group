@@ -26,9 +26,12 @@ if (isset($_POST['action'])) {
             $user['name'] = $name;
             $user['bio'] = $bio;
 
-            $userController->updateUser($user);
-            $user = $userController->get($_SESSION['user_id']); // Refresh user data
-            $successMessage = "Profile updated successfully.";
+            if($userController->updateUser($user)) {
+                $user = $userController->get($_SESSION['user_id']); // Refresh user data
+                $successMessage = "Profile updated successfully.";
+            } else {
+                $errorMessage = "Profile update failed.";
+            }
             break;
     }
 }
@@ -54,6 +57,8 @@ if (isset($_POST['action'])) {
                 <h1>Edit Profile</h1>
                 <?php if (isset($successMessage)) : ?>
                     <p style="color: green;"><?php echo $successMessage; ?></p>
+                <?php elseif(isset($errorMessage)): ?>
+                    <p style="color: red;"><?php echo $errorMessage; ?></p>
                 <?php endif; ?>
                 <form action="edit-profile.php" method="POST">
                     <div>

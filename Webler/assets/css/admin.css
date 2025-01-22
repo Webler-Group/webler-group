@@ -1,0 +1,112 @@
+/* Styling for the table */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd; /* Add a solid border around the table */
+}
+
+.admin-table thead {
+    background-color: #333;
+    color: #fff;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.admin-table th {
+    width: 15%; /* Adjust column width percentages */
+}
+
+.admin-table th:nth-child(1) { /* ID Column */
+    width: 10%;
+}
+
+.admin-table th:nth-child(2), /* Name Column */
+.admin-table th:nth-child(3) { /* Email Column */
+    width: 25%;
+}
+
+.admin-table th:nth-child(4) { /* Is Admin? Column */
+    width: 10%;
+}
+
+.admin-table th:nth-child(5) { /* Action Column */
+    width: 30%;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.admin-static-span {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.admin-edit-input {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin: 4px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: block;
+    resize: vertical; /* Allows the text area to be resized vertically */
+}
+
+/* Styling for action buttons */
+.admin-action-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.admin-action-buttons button,
+.admin-createUserBtn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.admin-edit-btn,
+.admin-delete-btn,
+.admin-createUserBtn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.admin-edit-btn:hover,
+.admin-delete-btn:hover,
+.admin-createUserBtn:hover {
+    background-color: #0056b3;
+}
+
+.admin-cancel-btn {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.admin-cancel-btn:hover {
+    background-color: #c82333;
+}
+
+.admin-save-btn {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.admin-save-btn:hover {
+    background-color: #218838;
+}
