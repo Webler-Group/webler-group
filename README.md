@@ -16,6 +16,7 @@ Feature1/
 |--page1.php
 |--page2.php
 |...
+|--api/   Api endpoints (AJAX requests)
 |--classes/   Utils used in pages
 |  |--Class1.php
 |  |--Class2.php
