@@ -3,8 +3,11 @@
 ## TODO
 
 - [x] Create config.php
-- [x] Create Header as part of Webler feature
-- [x] Create Footer as part of Webler feature
+- [x] Add Header
+- [x] Add Footer
+- [x] Add profile page
+- [x] Add admin panel
+- [ ] Integrate email seding
 - [x] Document Ubuntu installation
 - [ ] Document Windows installation
 
