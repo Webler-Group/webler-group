@@ -2,14 +2,15 @@
 session_start();
 
 // Include necessary files
-require_once __DIR__ . '/../Webler/classes/UserController.php';
+require_once __DIR__ . '/classes/UserController.php';
+require_once __DIR__ . '/classes/TokenTypeEnum.php';
 
 // Initialize message variable
 $message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get token, userId, and password details from POST request
-    $token = $_POST['token'] ?? '';
+    $tokenValue = $_POST['token'] ?? '';
     $userId = $_POST['user_id'] ?? '';
     $newPassword = $_POST['new_password'] ?? '';
     $confirmPassword = $_POST['confirm_password'] ?? '';
@@ -18,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userController = new UserController();
 
     // Validate token and user_id
-    if ($tokenData = $userController->validateToken($token)) {
+    if ($tokenData = $userController->validateToken($tokenValue, TokenTypeEnum::PASSWORD_RESET_TOKEN)) {
 
         if ($tokenData && $tokenData['user_id'] == $userId) {
             // Check if passwords match

@@ -10,7 +10,7 @@ if (isset($_POST['action'])) {
             break;
         case 'login':
             if (!empty($_POST['email']) && !empty($_POST['password'])) {
-                $UserController->login($_POST['email'], $_POST['password']);
+                $UserController->login($_POST['email'], $_POST['password'], function($message) { echo $message; });
             }
             break;
     }

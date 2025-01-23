@@ -2,8 +2,9 @@
 session_start();
 
 // Include necessary files
-require_once __DIR__ . '/../Webler/classes/UserController.php';
-require_once __DIR__ . '/../Webler/classes/EmailService.php';
+require_once __DIR__ . '/classes/UserController.php';
+require_once __DIR__ . '/classes/EmailService.php';
+require_once __DIR__ . '/classes/TokenTypeEnum.php';
 
 // Check if the form has been submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -18,16 +19,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     });
 
     if ($user) {
-        // User found, generate a token
-        $tokenType = 1; // Assuming 1 corresponds to PASSWORD_RESET_TOKEN
-        $timeAlive = 1800; // 30 minutes or 1800 seconds
 
-        $tokenId = $userController->createToken($user['id'], $tokenType, $timeAlive);
+        $token = $userController->createOrGetToken($user['id'], TokenTypeEnum::PASSWORD_RESET_TOKEN, 1800, true);
 
-        if ($tokenId) {
-            // Fetch the token value
-            $tokenData = $userController->getToken($tokenId);
-            $tokenValue = $tokenData['value'];
+        if ($token) {
+            $tokenValue = $token['value'];
 
             // Prepare encoded token and user ID for use in the URL
             $encodedToken = urlencode($tokenValue);

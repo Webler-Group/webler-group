@@ -1,4 +1,5 @@
 window.admin = (function () {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     let userData = [];
 
     loadUsers();
@@ -54,13 +55,13 @@ window.admin = (function () {
     }
 
     function loadUsers() {
+        const formData = new FormData();
+        formData.append('action', 'get-users');
+        formData.append('csrf_token', csrfToken);
         // Create a request to fetch users from the server
         fetch('/Webler/api/admin.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({ action: 'get-users' })
+            body: formData
         })
             .then(response => response.json())
             .then(data => {
@@ -80,7 +81,7 @@ window.admin = (function () {
                         createUserRow(user);
                     });
                 } else {
-                    alert('There was an error loading the users.');
+                    alert('There was an error loading the users: ' + data.message);
                 }
             })
             .catch(error => {
@@ -100,6 +101,7 @@ window.admin = (function () {
         formData.append('name', name);
         formData.append('email', email);
         formData.append('is_admin', isAdmin);
+        formData.append('csrf_token', csrfToken);
 
         fetch('/Webler/api/admin.php', {
             method: 'POST',
@@ -110,7 +112,7 @@ window.admin = (function () {
                 if (data.success) {
                     updateUser(data.data); // Use the extracted function to update userData and DOM
                 } else {
-                    alert('There was an error saving the changes.');
+                    alert('There was an error saving the changes:' + data.message);
                 }
             })
             .catch(error => {
@@ -166,6 +168,7 @@ window.admin = (function () {
         formData.append('name', name);
         formData.append('email', email);
         formData.append('is_admin', isAdmin);
+        formData.append('csrf_token', csrfToken);
 
         fetch('/Webler/api/admin.php', {
             method: 'POST',
@@ -184,7 +187,7 @@ window.admin = (function () {
                     // Hide the temporary new row
                     cancelNewUser();
                 } else {
-                    alert('There was an error creating the user.');
+                    alert('There was an error creating the user:' + data.message);
                 }
             })
             .catch(error => {
@@ -207,6 +210,7 @@ window.admin = (function () {
             const formData = new FormData();
             formData.append('action', 'delete-user');
             formData.append('delete_user_id', userId);
+            formData.append('csrf_token', csrfToken);
 
             // Send the POST request to delete the user
             fetch('/Webler/api/admin.php', {
@@ -227,16 +231,48 @@ window.admin = (function () {
                         if (userIndex > -1) {
                             userData.splice(userIndex, 1);
                         }
-
-                        alert('User successfully deleted.');
                     } else {
-                        alert('There was an error deleting the user.');
+                        alert('There was an error deleting the user: ' + data.message);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
         }
+    }
+
+    function changePassword(userId) {
+        // Prompt the admin to enter a new password for the user
+        const newPassword = prompt('Enter the new password:');
+
+        if (newPassword === null || newPassword.trim() === '') {
+            alert('Password change was cancelled or invalid input!');
+            return;
+        }
+
+        // Prepare FormData
+        const formData = new FormData();
+        formData.append('action', 'change-password');
+        formData.append('change_password_user_id', userId);
+        formData.append('new_password', newPassword);
+        formData.append('csrf_token', csrfToken);
+
+        // Send the request to the server
+        fetch('/Webler/api/admin.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Password changed successfully.');
+                } else {
+                    alert('There was an error changing the password: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 
     function htmlEscape(str) {
@@ -275,6 +311,7 @@ window.admin = (function () {
                             <div class="action-buttons admin-action-buttons">
                                 <button type="button" class="edit-btn admin-edit-btn" onclick="admin.toggleEdit(${user.id})">Edit</button>
                                 <button type="button" class="delete-btn admin-delete-btn" onclick="admin.deleteUser(${user.id})">Delete</button>
+                                <button type="button" class="change-password-btn admin-change-password-btn" onclick="admin.changePassword(${user.id})">Change Password</button>
                                 <div class="edit-form admin-edit-form" style="display:none;">
                                     <button type="button" class="save-btn admin-save-btn" onclick="admin.saveChanges(${user.id})">Save Changes</button>
                                     <button type="button" class="cancel-btn admin-cancel-btn" onclick="admin.cancelEdit(${user.id})">Cancel Editing</button>
@@ -293,7 +330,8 @@ window.admin = (function () {
         toggleEdit,
         deleteUser,
         saveChanges,
-        cancelEdit
+        cancelEdit,
+        changePassword
     }
 
 })();

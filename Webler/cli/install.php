@@ -40,20 +40,23 @@ try {
     $addColumnSql('users', 'name', "name VARCHAR(255)");
     $addColumnSql('users', 'is_active', "is_active TINYINT(1) NOT NULL DEFAULT 1");
 
+    $pdo->exec("DROP TABLE IF EXISTS tokens");
+    echo "Table 'tokens' deleted if exists.\n";
+
     // SQL statement to create the tokens table if it does not exist
     $sqlTokens = "CREATE TABLE IF NOT EXISTS tokens (
         id INT(11) AUTO_INCREMENT PRIMARY KEY,
         token_type INT NOT NULL,
         expire_date DATETIME NOT NULL,
         user_id INT(11) NOT NULL,
+        value VARCHAR(255) NOT NULL,
+        is_single_use TINYINT(1) NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )";
 
     // Execute the query for tokens table creation
     $pdo->exec($sqlTokens);
     echo "Table 'tokens' created or already exists.\n";
-
-    $addColumnSql('tokens', 'value', "value VARCHAR(255)");
 
     // Check if an admin user already exists
     $query = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email");

@@ -1,5 +1,5 @@
 <?php
 
-enum TokenTypeEnum: int {
-    case PASSWORD_RESET_TOKEN = 1;
+abstract class TokenTypeEnum {
+    public const PASSWORD_RESET_TOKEN = 1;
 }

@@ -2,6 +2,7 @@
 session_start();
 
 require_once __DIR__ . '/classes/UserController.php';
+require_once __DIR__. '/classes/CsrfTokenUtil.php';
 
 $userController = new UserController();
 
@@ -25,6 +26,7 @@ if (!$isAdmin) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php CsrfTokenUtil::addTokenMetaTag(); ?>
     <title>Admin Panel</title>
     <?php include '../Webler/includes/css.php'; ?>
     <link rel="stylesheet" href="/Webler/assets/css/admin.css">
