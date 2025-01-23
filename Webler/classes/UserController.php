@@ -15,11 +15,9 @@ class UserController extends Controller
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['password'])) {
-                // Start a session and set the user session data
-                session_start();
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_id'] = $user['id'];
-                
+
                 // Redirect to profile.php
                 header('Location: /Webler/profile.php');
                 exit();
@@ -38,6 +36,14 @@ class UserController extends Controller
         }
     }
 
+    public function logout()
+    {
+        session_unset();
+        session_destroy();
+        header('Location: /Webler/index.php');
+        exit();
+    }
+
     public function get($userId, callable $errorCallback = null)
     {
         try {
@@ -47,6 +53,39 @@ class UserController extends Controller
         } catch (PDOException $e) {
             if ($errorCallback) {
                 $errorCallback("Error fetching user: " . $e->getMessage());
+            }
+            return false;
+        }
+    }
+
+    public function getByFilter(array $filter, callable $errorCallback = null)
+    {
+        try {
+            // Validate filter array
+            if (empty($filter) || count($filter) !== 1) {
+                throw new InvalidArgumentException("Filter must be a non-empty associative array with one key-value pair.");
+            }
+
+            // Extract the key and value from the filter array
+            $column = key($filter); // Get the column name
+            $value = current($filter); // Get the value to search for
+
+            // Prepare the SQL statement using placeholders
+            $stmt = $this->db->prepare("SELECT * FROM users WHERE $column = :value");
+
+            // Execute the query with the provided value
+            $stmt->execute(['value' => $value]);
+
+            // Fetch the result as an associative array
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            if ($errorCallback) {
+                $errorCallback("Error fetching user: " . $e->getMessage());
+            }
+            return false;
+        } catch (InvalidArgumentException $e) {
+            if ($errorCallback) {
+                $errorCallback("Invalid filter: " . $e->getMessage());
             }
             return false;
         }
@@ -146,6 +185,96 @@ class UserController extends Controller
     public function getUsername($user)
     {
         return isset($user['name']) ? $user['name'] : 'Weblerian';
+    }
+
+    public function createToken($userId, $tokenType, $timeAlive)
+    {
+        $this->clearExpiredTokens();
+        try {
+            // Calculate expiration date for the new token
+            $expireDate = (new DateTime())->add(new DateInterval('PT' . $timeAlive . 'S'))->format('Y-m-d H:i:s');
+            $tokenValue = base64_encode(random_bytes(32)); // Generate a random base64 token
+
+            // Insert the new token into the database
+            $stmt = $this->db->prepare("INSERT INTO tokens (user_id, token_type, value, expire_date) VALUES (:user_id, :token_type, :value, :expire_date)");
+            $stmt->execute([
+                'user_id' => $userId,
+                'token_type' => $tokenType,
+                'value' => $tokenValue,
+                'expire_date' => $expireDate
+            ]);
+
+            // Get the ID of the newly created token
+            $newTokenId = $this->db->lastInsertId();
+
+            // Retrieve the creation time of the new token
+            $stmt = $this->db->prepare("SELECT expire_date FROM tokens WHERE id = :id");
+            $stmt->execute(['id' => $newTokenId]);
+            $newTokenData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($newTokenData) {
+                $newTokenExpireDate = $newTokenData['expire_date'];
+
+                // Delete older tokens of the same type for this user
+                $deleteStmt = $this->db->prepare("DELETE FROM tokens WHERE user_id = :user_id AND token_type = :token_type AND expire_date < :expire_date");
+                $deleteStmt->execute([
+                    'user_id' => $userId,
+                    'token_type' => $tokenType,
+                    'expire_date' => $newTokenExpireDate
+                ]);
+            }
+
+            return $newTokenId; // Return the generated token ID
+
+        } catch (PDOException $e) {
+            // Handle error
+            return false;
+        }
+    }
+
+    public function getToken($id)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM tokens WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Handle error
+            return false;
+        }
+    }
+
+    public function clearExpiredTokens()
+    {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM tokens WHERE expire_date < NOW()");
+            $stmt->execute();
+            return $stmt->rowCount(); // Return number of deleted rows
+        } catch (PDOException $e) {
+            // Handle error
+            return false;
+        }
+    }
+
+    public function validateToken($tokenValue)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM tokens WHERE value = :value");
+            $stmt->execute(['value' => $tokenValue]);
+            $token = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($token && new DateTime($token['expire_date']) > new DateTime()) {
+                // Token is valid, delete it and return true
+                $deleteStmt = $this->db->prepare("DELETE FROM tokens WHERE id = :id");
+                $deleteStmt->execute(['id' => $token['id']]);
+                return $token;
+            }
+
+            return false; // Token is invalid
+        } catch (PDOException $e) {
+            // Handle error
+            return false;
+        }
     }
 
     private function generateRandomPassword($length = 16)

@@ -1,11 +1,10 @@
 <?php
 session_start();
 
-require_once __DIR__. '/../config.php'; 
 require_once __DIR__ . '/classes/EphemerousController.php';        
 
 // Create Ephemerous object and connect to the database
-$ephemerousController = new EphemerousController($dbDSN, $dbUser, $dbPassword);
+$ephemerousController = new EphemerousController();
 
 // If the form is submitted, insert the new message
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {

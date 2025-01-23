@@ -1,9 +1,7 @@
 <?php
-session_start();
-require_once __DIR__ . '/../../config.php';
 require_once __DIR__ . '/../classes/UserController.php';
 
-$UserController = new UserController($dbDSN, $dbUser, $dbPassword);
+$UserController = new UserController();
 
 if (isset($_POST['action'])) {
     switch ($_POST['action']) {
@@ -36,7 +34,7 @@ if (isset($_POST['action'])) {
                 <button type="submit" name="action" value="login">Login</button>
             </div>
             <div class="form-row">
-                <a class="forgotten-password" href="#">Forgotten password?</a>
+                <a class="forgotten-password" href="/Webler/forgotten-password.php">Forgotten password?</a>
             </div>
         </form>
     <?php endif; ?>

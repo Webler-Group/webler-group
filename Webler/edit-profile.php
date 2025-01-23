@@ -1,10 +1,9 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/classes/UserController.php';
 
-$userController = new UserController($dbDSN, $dbUser, $dbPassword);
+$userController = new UserController();
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: /Webler/index.php');

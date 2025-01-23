@@ -1,0 +1,7 @@
+{
+    "name": "webler/webler-group",
+    "type": "project",
+    "require": {
+        "phpmailer/phpmailer": "^6.9"
+    }
+}

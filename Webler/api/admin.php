@@ -1,13 +1,12 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/../../config.php';
 require_once __DIR__ . '/../classes/UserController.php';
 
 $result = [
     'success' => true
 ];
-$userController = new UserController($dbDSN, $dbUser, $dbPassword);
+$userController = new UserController();
 
 $middleware = [
     function ($req) {
