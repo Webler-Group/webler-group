@@ -147,10 +147,11 @@ sudo apt install libapache2-mod-php
 
 First, verify if the files /etc/apache2/mods-enabled/php8.*.conf and /etc/apache2/mods-enabled/php8.*.load exist. If they do not exist, you can enable the module using the a2enmod command.
 
-Ensure that the mod_rewrite module is enabled:
+Ensure that the mod_rewrite and mod_headers are enabled:
 
 ```
 sudo a2enmod rewrite
+sudo a2enmod headers
 ```
 
 Restart the apache service.
