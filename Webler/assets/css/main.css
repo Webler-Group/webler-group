@@ -3,7 +3,7 @@
 }
 
 body {
-    background: #fff;
+    background: #aef;
     margin: 0;
 }
 
@@ -60,7 +60,6 @@ nav {
 
 main {
     flex-grow: 1;
-    padding: 10px;
 }
 
 footer {
@@ -102,6 +101,7 @@ footer {
 
 .user-horizontal-navigation {
     border-bottom: 1px solid #333;
+    background: #fff;
 }
 
 .user-horizontal-navigation ul {

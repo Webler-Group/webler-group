@@ -1,16 +1,18 @@
 <?php
 require_once __DIR__ . '/../classes/UserController.php';
 
-$UserController = new UserController();
+$userController = new UserController();
 
 if (isset($_POST['action'])) {
     switch ($_POST['action']) {
         case 'logout':
-            $UserController->logout();
+            $userController->logout();
             break;
         case 'login':
             if (!empty($_POST['email']) && !empty($_POST['password'])) {
-                $UserController->login($_POST['email'], $_POST['password'], function($message) { echo $message; });
+                $userController->login($_POST['email'], $_POST['password'], function ($message) {
+                    echo $message;
+                });
             }
             break;
     }
@@ -22,10 +24,19 @@ if (isset($_POST['action'])) {
     </div>
 
     <?php if (isset($_SESSION['user_id'])): ?>
-        <form method="post">
-            <a href="/Webler/profile.php">Profile</a>
-            <button type="submit" name="action" value="logout">Logout</button>
-        </form>
+        <?php
+        $user = $userController->get($_SESSION['user_id']);
+        ?>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div>
+                Logged as <?php echo htmlspecialchars($userController->getUsername($user), ENT_QUOTES, 'UTF-8'); ?>
+                <br>
+                <a href="/Webler/profile.php">Go to profile</a>
+            </div>
+            <form method="post">
+                <button type="submit" name="action" value="logout">Logout</button>
+            </form>
+        </div>
     <?php else: ?>
         <form class="login-form" method="post">
             <div class="form-row">
