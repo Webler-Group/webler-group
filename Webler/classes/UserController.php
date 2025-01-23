@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../Webler/classes/Controller.php';
+require_once __DIR__ . '/Database.php';
 
 class UserController extends Controller
 {
@@ -8,11 +9,9 @@ class UserController extends Controller
 
     public function login($email, $password, callable $errorCallback = null)
     {
+        global $DB;
         try {
-            $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
-            $stmt->execute(['email' => $email]);
-
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $user = $DB->select_one('users', '*', ['email' => $email]);
 
             if ($user && password_verify($password, $user['password'])) {
                 $_SESSION['user_email'] = $user['email'];
@@ -43,10 +42,9 @@ class UserController extends Controller
 
     public function get($userId, callable $errorCallback = null)
     {
+        global $DB;
         try {
-            $stmt = $this->db->prepare("SELECT * FROM users WHERE id = :id");
-            $stmt->execute(['id' => $userId]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            return $DB->select_one('users', '*', ['id' => $userId]);
         } catch (PDOException $e) {
             if ($errorCallback) {
                 $errorCallback("Error fetching user: " . $e->getMessage());
@@ -57,32 +55,12 @@ class UserController extends Controller
 
     public function getByFilter(array $filter, callable $errorCallback = null)
     {
+        global $DB;
         try {
-            // Validate filter array
-            if (empty($filter)) {
-                throw new InvalidArgumentException("Filter must be a non-empty associative array");
-            }
-
-            // Extract the key and value from the filter array
-            $column = key($filter); // Get the column name
-            $value = current($filter); // Get the value to search for
-
-            // Prepare the SQL statement using placeholders
-            $stmt = $this->db->prepare("SELECT * FROM users WHERE $column = :value");
-
-            // Execute the query with the provided value
-            $stmt->execute(['value' => $value]);
-
-            // Fetch the result as an associative array
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            return $DB->select_one('users', '*', $filter);
         } catch (PDOException $e) {
             if ($errorCallback) {
                 $errorCallback("Error fetching user: " . $e->getMessage());
-            }
-            return false;
-        } catch (InvalidArgumentException $e) {
-            if ($errorCallback) {
-                $errorCallback("Invalid filter: " . $e->getMessage());
             }
             return false;
         }
@@ -90,10 +68,9 @@ class UserController extends Controller
 
     public function getAllUsers(callable $errorCallback = null)
     {
+        global $DB;
         try {
-            // Adjusted SQL query to select only the specified columns
-            $stmt = $this->db->query("SELECT id, name, email, is_admin FROM users");
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $DB->select_many('users', 'id, name, email, is_admin');
         } catch (PDOException $e) {
             if ($errorCallback) {
                 $errorCallback("Error fetching all users: " . $e->getMessage());
@@ -104,9 +81,9 @@ class UserController extends Controller
 
     public function deleteUser($userId, callable $errorCallback = null)
     {
+        global $DB;
         try {
-            $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
-            return $stmt->execute(['id' => $userId]);
+            return $DB->delete('users', ['id' => $userId]);
         } catch (PDOException $e) {
             if ($errorCallback) {
                 $errorCallback("Error deleting user: " . $e->getMessage());
