@@ -11,6 +11,13 @@
 - [x] Document Ubuntu installation
 - [ ] Document Windows installation
 
+## First run
+
+1. Clone the project.
+2. Install dependencies with composer.
+3. Create config.php from config-local.php and fill in credentials.
+4. Run install.php cli script.
+
 ## Structure
 
 ```
@@ -73,7 +80,7 @@ session_start();
 
 CLI scripts are located in /Webler/cli.
 
-Run install.php before you open the site, this will create required tables and seed default data.
+- install.php: Create required tables and seed default data.
 
 ```
 php ./Webler/cli/install.php
@@ -96,6 +103,16 @@ Then check the version:
 
 ```
 php --version
+```
+
+#### Comoser
+
+Install [composer](https://getcomposer.org/)
+
+To install dependencies, open terminal in project dir and run:
+
+```
+composer update
 ```
 
 #### Apache
@@ -142,7 +159,7 @@ Restart the apache service.
 
 Clone the project from github under /var/www which is default apache directory.
 
-Craete configuration file:
+Create configuration file:
 
 ```
 sudo nano /etc/apache2/sites-available/webler.com.conf
