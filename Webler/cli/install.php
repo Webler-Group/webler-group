@@ -58,6 +58,14 @@ try {
     $pdo->exec($sqlTokens);
     echo "Table 'tokens' created or already exists.\n";
 
+    //Euphemerous Database creation
+    $pdo->exec("CREATE TABLE IF NOT EXISTS ephemerous (
+                id INT AUTO_INCREMENT,
+                message CHAR(255),
+                PRIMARY KEY(id)
+            );");
+    echo "ephemerous table created.\n";
+
     // Check if an admin user already exists
     $query = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
     $query->execute([':email' => $CFG->adminEmail]);
