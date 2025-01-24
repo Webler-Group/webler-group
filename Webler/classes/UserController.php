@@ -5,8 +5,6 @@ require_once __DIR__ . '/Database.php';
 
 class UserController extends Controller
 {
-    protected function init() {}
-
     public function login($email, $password, callable $errorCallback = null)
     {
         global $DB;

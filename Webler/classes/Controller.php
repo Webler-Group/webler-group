@@ -10,8 +10,6 @@ abstract class Controller {
         global $DB;
         $this->db = $DB->getConnection();
     }
-
-    protected abstract function init();
 }
 
 ?>

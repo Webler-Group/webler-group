@@ -9,6 +9,8 @@ $ephemerousController = new EphemerousController();
 // If the form is submitted, insert the new message
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {
     $ephemerousController->insert($_POST['message']);
+    header('Location: /Ephemerous/index.php');
+    exit();
 }
 
 // Fetch the latest message from the database

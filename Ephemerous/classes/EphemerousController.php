@@ -1,29 +1,20 @@
 <?php
 
 require_once __DIR__ . '/../../Webler/classes/Controller.php';
+require_once __DIR__ . '/../../Webler/classes/Database.php';
 
-class EphemerousController extends Controller {
-
-    // Method to create the table if it doesn't exist
-    public function init() {
-        $query = "
-            CREATE TABLE IF NOT EXISTS ephemerous (
-                id INT AUTO_INCREMENT,
-                message CHAR(255),
-                PRIMARY KEY(id)
-            );
-        ";
-        $this->db->exec($query);
-    }
+class EphemerousController extends Controller
+{
 
     // Method to get all records from the table
-    public function get() {
+    public function get()
+    {
+        global $DB;
         try {
-            $stmt = $this->db->query("SELECT * FROM ephemerous ORDER BY id DESC LIMIT 1");
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $DB->select_many('ephemerous', '*', [], 'id DESC', 0, 1);
 
-            if ($result) {
-                return $result['message'];
+            if (count($result) > 0) {
+                return $result[0]['message'];
             } else {
                 return "No records found.";
             }
@@ -33,14 +24,15 @@ class EphemerousController extends Controller {
     }
 
     // Method to insert a message into the table
-    public function insert($message) {
+    public function insert($message)
+    {
         try {
             //remove whitespace
             $message = trim($message);
             //remove html tags
             $message = strip_tags($message);
             //limit to 255 characters
-            if(strlen($message)>255){
+            if (strlen($message) > 255) {
                 $message = substr($message, 0, 255);
             }
             $stmt = $this->db->prepare("INSERT INTO ephemerous (message) VALUES (:message)");
@@ -51,5 +43,3 @@ class EphemerousController extends Controller {
         }
     }
 }
-
-?>

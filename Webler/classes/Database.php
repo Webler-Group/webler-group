@@ -24,45 +24,56 @@ class Database
         return $this->pdo;
     }
 
-    public function select_many($table, $columns = '*', $filters = [], $sort = '')
-    {
-        $sql = "SELECT $columns FROM $table";
+    public function select_many($table, $columns = '*', $filters = [], $sort = '', $offset = 0, $limit = 0)
+{
+    $sql = "SELECT $columns FROM $table";
 
-        $where = [];
-        $params = [];
-        foreach ($filters as $column => $value) {
-            $where[] = "$column = :$column";
-            $params[$column] = $value;
-        }
-
-        if (!empty($where)) {
-            $sql .= ' WHERE ' . implode(' AND ', $where);
-        }
-
-        if (!empty($sort)) {
-            $sql .= " ORDER BY $sort";
-        }
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $where = [];
+    $params = [];
+    foreach ($filters as $column => $value) {
+        $where[] = "$column = :$column";
+        $params[$column] = $value;
     }
 
-    public function select_many_sql($table, $columns = '*', $where = '', $sort = '')
-    {
-        $sql = "SELECT $columns FROM $table";
-
-        if (!empty($where)) {
-            $sql .= " WHERE $where";
-        }
-
-        if (!empty($sort)) {
-            $sql .= " ORDER BY $sort";
-        }
-
-        $stmt = $this->pdo->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (!empty($where)) {
+        $sql .= ' WHERE ' . implode(' AND ', $where);
     }
+
+    if (!empty($sort)) {
+        $sql .= " ORDER BY $sort";
+    }
+
+    if ($limit > 0) {
+        $sql .= " LIMIT $limit OFFSET $offset";
+    }
+
+    $stmt = $this->pdo->prepare($sql);
+
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function select_many_sql($table, $columns = '*', $where = '', $sort = '', $offset = 0, $limit = 0)
+{
+    $sql = "SELECT $columns FROM $table";
+
+    if (!empty($where)) {
+        $sql .= " WHERE $where";
+    }
+
+    if (!empty($sort)) {
+        $sql .= " ORDER BY $sort";
+    }
+
+    if ($limit > 0) {
+        $sql .= " LIMIT $limit OFFSET $offset";
+    }
+
+    $stmt = $this->pdo->prepare($sql);
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     public function select_one($table, $columns = '*', $filters = [])
     {
