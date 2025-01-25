@@ -82,6 +82,13 @@
                 await server.connect(peerId);
                 players[peerId] = new Player(-200, -200, 50, 50, canvas.width, canvas.height);
                 players[peerId].username = peerId;
+
+                server.broadcast(JSON.stringify({
+                    type: 'previous-user', 
+                    x: client.x, 
+                    y: client.y, 
+                    health: client.health
+                }))
                 
             }
 
@@ -103,7 +110,6 @@
                         if(players[from]) {
                             players[from].x = x;
                             players[from].y = y;
-                            players[from].health = health;
                         }else{
                             // Player that already present before we joining
                             players[from] = new Player(x, y, 50, 50, canvas.width, canvas.height);
@@ -114,6 +120,11 @@
                         if(players[from]) {
                             players[from].bullets.push(new Bullet(x, y, angle, players[from].color));
                         }
+                        break;
+                    case 'previous-user':
+                        players[from] = new Player(x, y, 50, 50, canvas.width, canvas.height);
+                        players[from].username = from;
+                        players[from].health = health;
                         break;
                 }
             }
@@ -128,6 +139,8 @@
         let now = performance.now();
         dt = (now - prev) / 1000;
 
+        dt = Math.min(0.016, Math.max(dt, 0.02))
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Update player movement and send position
@@ -138,7 +151,6 @@
             type: 'position-update',
             x: player.x,
             y: player.y,
-            health: player.health
         }));
 
         // Update and draw bullets

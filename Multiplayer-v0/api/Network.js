@@ -197,7 +197,7 @@ class Network {
                     break; 
                 case EVENT_TYPES.MESSAGE:
                     if (to === this.currentRoom && from !== this.uid) {
-                        console.log(`${from}: ${message}`);
+                        // console.log(`${from}: ${message}`);
                         this.onMessage(message, from);
                     }
                     break;
