@@ -67,7 +67,7 @@ try {
     echo "ephemerous table created.\n";
 
     // Multiplayer apps table creation
-    $pdo->exec("CREATE TABLE M_APPS (
+    $pdo->exec("CREATE TABLE IF NOT EXISTS M_APPS (
     application_name VARCHAR(50) PRIMARY KEY,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
