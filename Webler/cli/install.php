@@ -66,6 +66,14 @@ try {
             );");
     echo "ephemerous table created.\n";
 
+    // Multiplayer apps table creation
+    $pdo->exec("CREATE TABLE M_APPS (
+    application_name VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);");
+    echo "Multiplayer apps table created.";
+
     // Check if an admin user already exists
     $query = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
     $query->execute([':email' => $CFG->adminEmail]);
