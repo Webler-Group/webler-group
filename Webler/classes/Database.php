@@ -25,55 +25,60 @@ class Database
     }
 
     public function select_many($table, $columns = '*', $filters = [], $sort = '', $offset = 0, $limit = 0)
-{
-    $sql = "SELECT $columns FROM $table";
+    {
+        $sql = "SELECT $columns FROM $table";
 
-    $where = [];
-    $params = [];
-    foreach ($filters as $column => $value) {
-        $where[] = "$column = :$column";
-        $params[$column] = $value;
+        $where = [];
+        $params = [];
+        foreach ($filters as $column => $value) {
+            $where[] = "$column = :$column";
+            $params[$column] = $value;
+        }
+
+        if (!empty($where)) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
+        }
+
+        if (!empty($sort)) {
+            $sql .= " ORDER BY $sort";
+        }
+
+        if ($limit > 0) {
+            $sql .= " LIMIT $limit OFFSET $offset";
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    if (!empty($where)) {
-        $sql .= ' WHERE ' . implode(' AND ', $where);
+    public function select_many_where($table, $columns = '*', $where = '', $sort = '', $offset = 0, $limit = 0)
+    {
+        $sql = "SELECT $columns FROM $table";
+
+        if (!empty($where)) {
+            $sql .= " WHERE $where";
+        }
+
+        if (!empty($sort)) {
+            $sql .= " ORDER BY $sort";
+        }
+
+        if ($limit > 0) {
+            $sql .= " LIMIT $limit OFFSET $offset";
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    if (!empty($sort)) {
-        $sql .= " ORDER BY $sort";
+    public function select_many_sql($sql)
+    {
+        // TODO
     }
-
-    if ($limit > 0) {
-        $sql .= " LIMIT $limit OFFSET $offset";
-    }
-
-    $stmt = $this->pdo->prepare($sql);
-
-    $stmt->execute($params);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-public function select_many_sql($table, $columns = '*', $where = '', $sort = '', $offset = 0, $limit = 0)
-{
-    $sql = "SELECT $columns FROM $table";
-
-    if (!empty($where)) {
-        $sql .= " WHERE $where";
-    }
-
-    if (!empty($sort)) {
-        $sql .= " ORDER BY $sort";
-    }
-
-    if ($limit > 0) {
-        $sql .= " LIMIT $limit OFFSET $offset";
-    }
-
-    $stmt = $this->pdo->prepare($sql);
-
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
 
     public function select_one($table, $columns = '*', $filters = [])
     {
@@ -97,7 +102,7 @@ public function select_many_sql($table, $columns = '*', $where = '', $sort = '',
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function select_one_sql($table, $columns = '*', $where = '')
+    public function select_one_where($table, $columns = '*', $where = '')
     {
         $sql = "SELECT $columns FROM $table";
 
@@ -111,7 +116,13 @@ public function select_many_sql($table, $columns = '*', $where = '', $sort = '',
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function delete($table, $filters) {
+    public function select_one_sql($sql)
+    {
+        // TODO
+    }
+
+    public function delete($table, $filters)
+    {
         $sql = "DELETE FROM $table";
 
         $where = [];
@@ -129,6 +140,41 @@ public function select_many_sql($table, $columns = '*', $where = '', $sort = '',
 
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute($params);
+    }
+
+    public function delete_where($table, $filters)
+    {
+        // TODO
+    }
+
+    public function update($table, $dataitem)
+    {
+        // TODO
+    }
+
+    public function insert_one($table, $dataitem)
+    {
+        // TODO
+    }
+
+    public function insert_many($table, $dataitems)
+    {
+        // TODO
+    }
+
+    public function count($table, $filters)
+    {
+        // TODO
+    }
+
+    public function count_where($table, $filters)
+    {
+        // TODO
+    }
+
+    public function count_sql($table, $filters)
+    {
+        // TODO
     }
 }
 
