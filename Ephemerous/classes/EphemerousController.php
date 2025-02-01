@@ -9,12 +9,13 @@ class EphemerousController extends Controller
     // Method to get all records from the table
     public function get()
     {
+        $numberOfMessages = 3;
         global $DB;
         try {
-            $result = $DB->select_many('ephemerous', '*', [], 'id DESC', 0, 1);
+            $results = $DB->select_many('ephemerous', '*', [], 'id DESC', 0, $numberOfMessages);
 
-            if (count($result) > 0) {
-                return $result[0]['message'];
+            if (count($results) > 0) {
+                return array_column($results,'message');
             } else {
                 return "No records found.";
             }

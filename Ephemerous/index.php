@@ -13,8 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {
     exit();
 }
 
-// Fetch the latest message from the database
-$latestMessage = $ephemerousController->get();
+// Fetch the latest messages from the database
+$latestMessages = $ephemerousController->get();
 ?>
 
 <!DOCTYPE html>
@@ -36,8 +36,11 @@ $latestMessage = $ephemerousController->get();
 
             <!-- Display the latest message -->
             <div class="message-box">
-                <strong>Latest Message:</strong><br>
-                <p><?php echo htmlspecialchars($latestMessage); ?></p>
+                <strong>Latest Messages:</strong><br>
+                <?php
+                    foreach($latestMessages as $message)
+                        echo '<p>'.htmlspecialchars($message).'</p><hr>';
+                ?>
             </div>
 
             <!-- Form to create a new message -->
