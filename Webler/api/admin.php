@@ -1,39 +1,22 @@
 <?php
 session_start();
 
+require_once __DIR__ . '/../classes/ApiRequest.php';
 require_once __DIR__ . '/../classes/UserController.php';
 require_once __DIR__ . '/../classes/CsrfTokenUtil.php';
 
-$result = [
-    'success' => true
-];
 $userController = new UserController();
 
-/**
- * Validates required POST fields.
- *
- * @param array $requiredFields An array of required field names.
- * @return bool True if all required fields are present and non-empty, false otherwise.
- */
-function validatePostFields($requiredFields) {
-    foreach ($requiredFields as $field) {
-        if (empty($_POST[$field])) {
-            return false; // Return false if any required field is missing or empty
-        }
-    }
-    return true; // Return true if all required fields are present and non-empty
-}
-
 $middleware = [
-    function ($req) {
-        if (!isset($_SESSION['user_id'])) {
+    function ($req) use ($userController) {
+        if (!$userController->getCurrentId()) {
             $req->message = 'User not logged in.';
             return false;
         }
         return true;
     },
     function ($req) use ($userController) {
-        $req->user = $userController->get($_SESSION['user_id']);
+        $req->user = $userController->getCurrent();
         if (!$req->user['is_admin']) {
             $req->message = 'User does not have admin privileges.';
             return false;
@@ -63,7 +46,7 @@ $middleware = [
             'change-password' => ['change_password_user_id', 'new_password']
         ];
 
-        if (!validatePostFields($fieldMap[$action] ?? [])) {
+        if (!ApiRequest::validatePostFields($fieldMap[$action] ?? [])) {
             $req->message = 'Missing or empty required fields for action: ' . $action;
             return false;
         }
@@ -126,20 +109,7 @@ $middleware = [
     }
 ];
 
-$req = new stdClass();
+$apiRequest = new ApiRequest($middleware);
 
-foreach ($middleware as $fn) {
-    if (!$fn($req)) {
-        $result['success'] = false;
-        if (isset($req->message)) {
-            $result['message'] = $req->message;
-        }
-        break;
-    }
-}
-
-if (isset($req->data)) {
-    $result['data'] = $req->data;
-}
-
+$result = $apiRequest->execute();
 echo json_encode($result);

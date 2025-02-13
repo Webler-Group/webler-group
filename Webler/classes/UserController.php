@@ -5,6 +5,8 @@ require_once __DIR__ . '/Database.php';
 
 class UserController extends Controller
 {
+    public const SESSION_USER_ID = "user_id";
+
     public function login($email, $password, callable $errorCallback = null)
     {
         global $DB;
@@ -13,7 +15,7 @@ class UserController extends Controller
 
             if ($user && password_verify($password, $user['password'])) {
                 $_SESSION['user_email'] = $user['email'];
-                $_SESSION['user_id'] = $user['id'];
+                $_SESSION[self::SESSION_USER_ID] = $user['id'];
 
                 // Redirect to profile.php
                 header('Location: /Webler/profile.php');
@@ -284,6 +286,14 @@ class UserController extends Controller
             // Handle error
             return false;
         }
+    }
+
+    public function getCurrentId(): ?int {
+        return $_SESSION[self::SESSION_USER_ID] ?? null;
+    }
+
+    public function getCurrent($errorCallback = null) {
+        return $this->get($_SESSION[self::SESSION_USER_ID], $errorCallback);
     }
 
     private function generateRandomPassword($length = 16)

@@ -22,4 +22,6 @@ $CFG->emailPort = 465;
 $CFG->emailUser = "";
 $CFG->emailPassword = "";
 
+$CFG->dataroot =  "/var/www/webler-group/filesystem";
+
 ?>

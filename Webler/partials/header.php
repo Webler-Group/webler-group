@@ -17,15 +17,17 @@ if (isset($_POST['action'])) {
             break;
     }
 }
+
+$isLogged = $userController->getCurrentId();
 ?>
 <header>
     <div class="logo-wrapper">
         <img src="/Webler/assets/images/logo.png" alt="Webler Logo" class="logo">
     </div>
 
-    <?php if (isset($_SESSION['user_id'])): ?>
+    <?php if ($isLogged): ?>
         <?php
-        $user = $userController->get($_SESSION['user_id']);
+        $user = $userController->getCurrent();
         ?>
         <div style="display: flex; align-items: center; gap: 10px;">
             <div>

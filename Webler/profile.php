@@ -5,12 +5,12 @@ require_once __DIR__ . '/classes/UserController.php';
 
 $userController = new UserController();
 
-if (!isset($_SESSION['user_id'])) {
+if (!$userController->getCurrentId()) {
     header('Location: /Webler/index.php');
     exit();
 }
 
-$user = $userController->get($_SESSION['user_id']);
+$user = $userController->getCurrent();
 $isAdmin = $user['is_admin'];
 
 $username = $userController->getUsername($user);

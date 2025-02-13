@@ -6,12 +6,12 @@ require_once __DIR__. '/classes/CsrfTokenUtil.php';
 
 $userController = new UserController();
 
-if (!isset($_SESSION['user_id'])) {
+if (!$userController->getCurrentId()) {
     header('Location: /Webler/index.php');
     exit();
 }
 
-$currentUser = $userController->get($_SESSION['user_id']);
+$currentUser = $userController->getCurrent();
 $isAdmin = $currentUser['is_admin'];
 
 // Ensure only admin users can access this page

@@ -77,7 +77,8 @@ class Database
 
     public function select_many_sql($sql)
     {
-        // TODO
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function select_one($table, $columns = '*', $filters = [])
@@ -118,7 +119,8 @@ class Database
 
     public function select_one_sql($sql)
     {
-        // TODO
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function delete($table, $filters)
@@ -142,39 +144,123 @@ class Database
         return $stmt->execute($params);
     }
 
-    public function delete_where($table, $filters)
+    public function delete_where($table, $where)
     {
-        // TODO
+        $sql = "DELETE FROM $table";
+
+        if (!empty($where)) {
+            $sql .= " WHERE $where";
+        } else {
+            throw new InvalidArgumentException('Where clause cannot be empty for delete operation.');
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute();
     }
 
-    public function update($table, $dataitem)
+    public function update($table, $dataitem, $filters)
     {
-        // TODO
+        $columns = [];
+        $params = [];
+        foreach ($dataitem as $column => $value) {
+            $columns[] = "$column = :$column";
+            $params[$column] = $value;
+        }
+
+        $sql = "UPDATE $table SET " . implode(', ', $columns);
+
+        $where = [];
+        foreach ($filters as $column => $value) {
+            $where[] = "$column = :filter_$column";
+            $params["filter_$column"] = $value;
+        }
+
+        if (!empty($where)) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
+        } else {
+            throw new InvalidArgumentException('Filters cannot be empty for update operation.');
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($params);
     }
 
     public function insert_one($table, $dataitem)
     {
-        // TODO
+        $columns = array_keys($dataitem);
+        $placeholders = array_map(fn($column) => ":$column", $columns);
+
+        $sql = "INSERT INTO $table (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $placeholders) . ")";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($dataitem);
+
+        return $this->pdo->lastInsertId();
     }
 
     public function insert_many($table, $dataitems)
     {
-        // TODO
+        if (empty($dataitems)) {
+            throw new InvalidArgumentException('Data items cannot be empty for insert operation.');
+        }
+
+        $columns = array_keys($dataitems[0]);
+        $columnsList = implode(', ', $columns);
+
+        $valuesList = [];
+        $params = [];
+        foreach ($dataitems as $index => $dataitem) {
+            $placeholders = [];
+            foreach ($dataitem as $column => $value) {
+                $placeholder = ":{$column}_{$index}";
+                $placeholders[] = $placeholder;
+                $params[$placeholder] = $value;
+            }
+            $valuesList[] = '(' . implode(', ', $placeholders) . ')';
+        }
+
+        $sql = "INSERT INTO $table ($columnsList) VALUES " . implode(', ', $valuesList);
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($params);
     }
 
     public function count($table, $filters)
     {
-        // TODO
+        $sql = "SELECT COUNT(*) as count FROM $table";
+
+        $where = [];
+        $params = [];
+        foreach ($filters as $column => $value) {
+            $where[] = "$column = :$column";
+            $params[$column] = $value;
+        }
+
+        if (!empty($where)) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
-    public function count_where($table, $filters)
+    public function count_where($table, $where)
     {
-        // TODO
+        $sql = "SELECT COUNT(*) as count FROM $table";
+
+        if (!empty($where)) {
+            $sql .= " WHERE $where";
+        }
+
+        $stmt = $this->pdo->query($sql);
+        return (int) $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
     public function count_sql($table, $filters)
     {
-        // TODO
+        $stmt = $this->pdo->query($sql);
+        return (int) $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 }
 

@@ -64,7 +64,7 @@ try {
                 message CHAR(255),
                 PRIMARY KEY(id)
             );");
-    echo "ephemerous table created.\n";
+    echo "ephemerous table created or already exists.\n";
 
     // Check if an admin user already exists
     $query = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
@@ -95,6 +95,20 @@ try {
     ]);
 
     echo "Admin name set to WeblerCodes.\n";
+
+    $sqlFiles = "CREATE TABLE IF NOT EXISTS files (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        filename VARCHAR(255) NOT NULL,
+        filepath VARCHAR(255) NOT NULL,
+        timecreated DATETIME NOT NULL,
+        filesize INT NOT NULL,
+        mimetype VARCHAR(255) NOT NULL,
+        contenthash VARCHAR(255) NOT NULL,
+        pathnamehash VARCHAR(255) NOT NULL UNIQUE
+    )";
+    
+    $pdo->exec($sqlFiles);
+    echo "Table 'files' created or already exists.\n";
 
 } catch (\PDOException $e) {
     // Handle connection errors

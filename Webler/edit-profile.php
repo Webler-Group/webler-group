@@ -5,12 +5,12 @@ require_once __DIR__ . '/classes/UserController.php';
 
 $userController = new UserController();
 
-if (!isset($_SESSION['user_id'])) {
+if (!$userController->getCurrentId()) {
     header('Location: /Webler/index.php');
     exit();
 }
 
-$user = $userController->get($_SESSION['user_id']);
+$user = $userController->getCurrent();
 $isAdmin = $user['is_admin'];
 
 // Handle form submission
@@ -26,7 +26,7 @@ if (isset($_POST['action'])) {
             $user['bio'] = $bio;
 
             if($userController->updateUser($user)) {
-                $user = $userController->get($_SESSION['user_id']); // Refresh user data
+                $user = $userController->getCurrent(); // Refresh user data
                 $successMessage = "Profile updated successfully.";
             } else {
                 $errorMessage = "Profile update failed.";
