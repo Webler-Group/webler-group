@@ -9,14 +9,32 @@
 - [x] Add admin panel
 - [ ] Integrate email seding
 - [x] Document Ubuntu installation
-- [ ] Document Windows installation
+- [x] Document Windows installation
 
 ## First run
 
+0. Setup the database.
 1. Clone the project.
 2. Install dependencies with composer.
 3. Create config.php from config-local.php and fill in credentials.
 4. Run install.php cli script.
+
+## Database Setup
+
+Create Webler database:
+
+```
+MariaDB> CREATE DATABASE webler_localhost_db;
+MariaDB> SHOW DATABASES;
+```
+
+Create Webler user and grant privileges on the newly created database to the user:
+
+```
+MariaDB> CREATE USER 'webler'@'localhost' IDENTIFIED BY 'password';
+MariaDB> GRANT ALL PRIVILEGES ON webler_localhost_db.* TO 'webler'@'localhost';
+MariaDB> FLUSH PRIVILEGES;
+```
 
 ## Structure
 
@@ -261,16 +279,43 @@ Now you can access mariadb from command line:
 mariadb -u root -p
 ```
 
-Create Webler database:
+Follow [#database-setup](Database Setup).
+
+### Windows
+
+Download XAMPP for Windows.
+
+Add PHP into PATH: Go to environment variables and edit PATH in the system variables - Add the PHP directory based on XAMPP installation directory. (The default directory is C:\xampp, in that case add C:\xampp\php)
+
+Clone the project from github into htdocs folder in the XAMPP directory.
+
+In the XAMPP directory open apache\conf\extra\httpd-vhosts.conf.
+
+Add the following (update the paths according to your location of the project):
 
 ```
-MariaDB> CREATE DATABASE webler_localhost_db;
-MariaDB> SHOW DATABASES;
+<VirtualHost *:80>
+   ServerAdmin webmaster@webler.com
+   ServerName webler.com
+   ServerAlias www.webler.com
+   DocumentRoot "C:/xampp/htdocs/webler-group"
+
+   <Directory "C:/xampp/htdocs/webler-group">
+      AllowOverride All
+      Require all granted
+   </Directory>
+
+   ErrorLog "logs/webler.com_error.log"
+   CustomLog "logs/webler.com_access.log" combined
+</VirtualHost>
 ```
 
-Create Webler user and grant privileges on the newly created database to the user:
+Open C:\Windows\System32\drivers\etc\hosts and add:
 
 ```
-MariaDB> CREATE USER 'webler'@'localhost' IDENTIFIED BY 'password';
-MariaDB> GRANT ALL PRIVILEGES ON webler_localhost_db.* TO 'webler'@'localhost';
-MariaDB> FLUSH PRIVILEGES;
+127.0.0.1 webler.com
+```
+
+Run MySQL admin site from the XAMPP control panel and go to the SQL tab.
+
+Follow [#database-setup](Database Setup).
