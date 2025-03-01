@@ -279,7 +279,7 @@ Now you can access mariadb from command line:
 mariadb -u root -p
 ```
 
-Follow [#database-setup](Database Setup).
+Follow [Database Setup](#database-setup).
 
 ### Windows
 
@@ -318,4 +318,4 @@ Open C:\Windows\System32\drivers\etc\hosts and add:
 
 Run MySQL admin site from the XAMPP control panel and go to the SQL tab.
 
-Follow [#database-setup](Database Setup).
+Follow [Database Setup](#database-setup).
