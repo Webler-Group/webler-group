@@ -22,7 +22,7 @@ $isLogged = $userController->getCurrentId();
 ?>
 <header>
     <div class="logo-wrapper">
-        <img src="/Webler/assets/images/logo.png" alt="Webler Logo" class="logo">
+        <img src="/Webler/assets/images/logo-full.png" alt="Webler Logo" class="logo">
     </div>
 
     <?php if ($isLogged): ?>

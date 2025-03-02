@@ -93,6 +93,7 @@ window.admin = (function () {
         const name = document.querySelector(`#row-${userId} .edit-input[name='name']`).value;
         const email = document.querySelector(`#row-${userId} .edit-input[name='email']`).value;
         const isAdmin = document.querySelector(`#row-${userId} .edit-input[name='is_admin']`).checked ? 1 : 0;
+        const isIterable = document.querySelector(`#row-${userId} .edit-input[name='is_iterable']`).checked ? 1 : 0;
 
         // Prepare FormData
         const formData = new FormData();
@@ -102,6 +103,7 @@ window.admin = (function () {
         formData.append('email', email);
         formData.append('is_admin', isAdmin);
         formData.append('csrf_token', csrfToken);
+        formData.append("is_iterable", isIterable);
 
         fetch('/Webler/api/admin.php', {
             method: 'POST',
@@ -148,7 +150,7 @@ window.admin = (function () {
         staticSpans.forEach(span => {
             const name = span.dataset.name;
             if (name in updatedUser) {
-                span.textContent = name == "is_admin" ? updatedUser[name] == 1 ? "Yes" : "No" : updatedUser[name];
+                span.textContent = span.dataset.type == "bool" ? updatedUser[name] == 1 ? "Yes" : "No" : updatedUser[name];
             }
         });
     }
@@ -157,6 +159,7 @@ window.admin = (function () {
         const name = document.querySelector(`#row-new .edit-input[name='name']`).value;
         const email = document.querySelector(`#row-new .edit-input[name='email']`).value;
         const isAdmin = document.querySelector(`#row-new .edit-input[name='is_admin']`).checked ? 1 : 0;
+        const isIterable = document.querySelector(`#row-new .edit-input[name='is_iterable']`).checked ? 1 : 0;
 
         if (!email) {
             alert('Email is required!');
@@ -169,6 +172,7 @@ window.admin = (function () {
         formData.append('email', email);
         formData.append('is_admin', isAdmin);
         formData.append('csrf_token', csrfToken);
+        formData.append("is_iterable", isIterable);
 
         fetch('/Webler/api/admin.php', {
             method: 'POST',
@@ -296,16 +300,20 @@ window.admin = (function () {
         userRow.innerHTML = `
                         <td>${htmlEscape(user.id)}</td>
                         <td>
-                            <span data-name="name" class="static-span admin-static-span">${htmlEscape(user.name || '')}</span>
+                            <span data-name="name" data-type="string" class="static-span admin-static-span">${htmlEscape(user.name || '')}</span>
                             <input autocomplete="off" type="text" class="edit-input admin-edit-input" style="display:none;" name="name" value="${htmlEscape(user.name || '')}">
                         </td>
                         <td>
-                            <span data-name="email" class="static-span admin-static-span">${htmlEscape(user.email)}</span>
+                            <span data-name="email" data-type="string" class="static-span admin-static-span">${htmlEscape(user.email)}</span>
                             <input autocomplete="off" type="email" class="edit-input admin-edit-input" style="display:none;" name="email" value="${htmlEscape(user.email)}">
                         </td>
                         <td>
-                            <span data-name="is_admin" class="static-span admin-static-span">${user.is_admin ? 'Yes' : 'No'}</span>
+                            <span data-name="is_admin" data-type="bool" class="static-span admin-static-span">${user.is_admin ? 'Yes' : 'No'}</span>
                             <input type="checkbox" class="edit-input admin-edit-input" style="display:none;" name="is_admin" ${user.is_admin ? 'checked' : ''}>
+                        </td>
+                        <td>
+                            <span data-name="is_iterable" data-type="bool" class="static-span admin-static-span">${user.is_iterable ? 'Yes' : 'No'}</span>
+                            <input type="checkbox" class="edit-input admin-edit-input" style="display:none;" name="is_iterable" ${user.is_iterable ? 'checked' : ''}>
                         </td>
                         <td>
                             <div class="action-buttons admin-action-buttons">

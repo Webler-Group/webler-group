@@ -57,6 +57,7 @@ $middleware = [
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
                     'is_admin' => $_POST['is_admin'],
+                    "is_iterable" => $_POST["is_iterable"],
                     'id' => $_POST['edit_user_id']
                 ];
                 if (!$userController->updateUser($user)) {
@@ -70,7 +71,8 @@ $middleware = [
                 $user = [
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
-                    'is_admin' => $_POST['is_admin']
+                    'is_admin' => $_POST['is_admin'],
+                    "is_iterable" => $_POST["is_iterable"]
                 ];
                 $newUserId = $userController->createUser($user);
                 if (!$newUserId) {

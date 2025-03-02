@@ -39,10 +39,12 @@ class Filesystem
     public function removeFile($contenthash) {
         $hashfile = $this->getLocalPathFromHash($contenthash);
 
-        unlink($hashfile);
+        if(is_file($hashfile)) {
+            unlink($hashfile);
+        }
     }
 
-    public function addFileFromPath($pathname) {
+    public function addFileFromPath($pathname, $uploadedFile = false) {
         $contenthash = self::getHashFromPath($pathname);
         $filesize = filesize($pathname);
         
@@ -58,7 +60,11 @@ class Filesystem
             mkdir($hashpath, 0755, true);
         }
 
-        copy($pathname, $hashfile);
+        if($uploadedFile) {
+            move_uploaded_file($pathname, $hashfile);
+        } else {
+            copy($pathname, $hashfile);
+        }
 
         return array($contenthash, $filesize, true);
     }
@@ -96,5 +102,23 @@ class Filesystem
 
     public function getLocalPathFromHash($contenthash) {
         return $this->getFullDirFromHash($contenthash) . '/' . $contenthash;
+    }
+
+    public function getMimeTypeFromHash($contenthash)
+    {
+        $filePath = $this->getLocalPathFromHash($contenthash);
+        if (file_exists($filePath)) {
+            // Create a new finfo resource
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+            // Get the MIME type for the specified file
+            $mimeType = finfo_file($finfo, $filePath);
+
+            // Close the finfo resource
+            finfo_close($finfo);
+
+            return $mimeType;
+        }
+        return 'document/unknown';
     }
 }

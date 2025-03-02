@@ -47,6 +47,7 @@ if (!$isAdmin) {
                             <th>Name</th>
                             <th>Email</th>
                             <th>Is Admin?</th>
+                            <th>Is Iterable?</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -61,6 +62,9 @@ if (!$isAdmin) {
                             </td>
                             <td>
                                 <input type="checkbox" class="edit-input admin-edit-input" name="is_admin">
+                            </td>
+                            <td>
+                                <input type="checkbox" class="edit-input admin-edit-input" name="is_iterable" checked>
                             </td>
                             <td>
                                 <div class="action-buttons admin-action-buttons">

@@ -163,6 +163,10 @@ sudo apt update
 sudo apt install libapache2-mod-php
 ```
 
+```
+sudo apt-get install php-gd
+```
+
 First, verify if the files /etc/apache2/mods-enabled/php8.*.conf and /etc/apache2/mods-enabled/php8.*.load exist. If they do not exist, you can enable the module using the a2enmod command.
 
 Ensure that the mod_rewrite and mod_headers are enabled:
@@ -315,6 +319,8 @@ Open C:\Windows\System32\drivers\etc\hosts and add:
 ```
 127.0.0.1 webler.com
 ```
+
+Open php.ini and search for line ;extension=gd and uncomment the line.
 
 Run MySQL admin site from the XAMPP control panel and go to the SQL tab.
 

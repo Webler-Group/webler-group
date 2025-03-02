@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../../Webler/classes/Controller.php';
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . "/Filestorage.php";
 
 class UserController extends Controller
 {
@@ -66,11 +67,11 @@ class UserController extends Controller
         }
     }
 
-    public function getAllUsers(callable $errorCallback = null)
+    public function getAllUsers($iterableOnly = false, callable $errorCallback = null)
     {
         global $DB;
         try {
-            return $DB->select_many('users', 'id, name, email, is_admin');
+            return $DB->select_many('users', 'id, name, email, is_admin, is_iterable', $iterableOnly ? ["is_iterable" => true] : []);
         } catch (PDOException $e) {
             if ($errorCallback) {
                 $errorCallback("Error fetching all users: " . $e->getMessage());
@@ -160,6 +161,24 @@ class UserController extends Controller
     public function getUsername($user)
     {
         return isset($user['name']) ? $user['name'] : 'Weblerian';
+    }
+
+    public function getAvatarUrl($user)
+    {
+        $fs = Filestorage::get();
+        return $fs->fileExists("/avatars", $user["id"] . ".png") ? "/Webler/file.php?path=/avatars/avatar.png" : "/Webler/assets/images/logo.png";
+    }
+
+    public function updateAvatar($user, $avatar)
+    {
+        $fs = Filestorage::get();
+        $fileid = $fs->createDraftfile($avatar["name"], $avatar["tmp_name"]);
+        $filerecord = $fs->getFileById($fileid);
+        if($fs->fileExists("/avatars", $user["id"] . ".png")) {
+            $fs->deleteFile($fs->getFile("/avatars", $user["id"] . ".png"));
+        }
+        $fs->convertImage(["filename" => $user["id"] . ".png", "filepath" => "/avatars", "mimetype" => "image/jpeg"], $filerecord, 128, 128);
+        $fs->deleteFile($filerecord);
     }
 
     public function createOrGetToken($userId, $tokenType, $timeAlive, $singleUse)
@@ -288,11 +307,13 @@ class UserController extends Controller
         }
     }
 
-    public function getCurrentId(): ?int {
+    public function getCurrentId(): ?int
+    {
         return $_SESSION[self::SESSION_USER_ID] ?? null;
     }
 
-    public function getCurrent($errorCallback = null) {
+    public function getCurrent($errorCallback = null)
+    {
         return $this->get($_SESSION[self::SESSION_USER_ID], $errorCallback);
     }
 

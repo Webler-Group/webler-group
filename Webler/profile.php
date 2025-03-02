@@ -14,6 +14,7 @@ $user = $userController->getCurrent();
 $isAdmin = $user['is_admin'];
 
 $username = $userController->getUsername($user);
+$avatarUrl = $userController->getAvatarUrl($user);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,6 +24,17 @@ $username = $userController->getUsername($user);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <?php include '../Webler/includes/css.php'; ?>
+    <style>
+        /* Avatar style */
+        .avatar {
+            width: 128px;
+            height: 128px;
+            border-radius: 50%; /* Make it circular */
+            object-fit: cover; /* Ensure the image is cropped to fit the circle */
+            border: 2px solid #ddd; /* Optional border around avatar */
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 
 <body>
@@ -36,6 +48,12 @@ $username = $userController->getUsername($user);
                 <div class="user-info">
                     <h1>Welcome, <?php echo htmlspecialchars($username); ?>!</h1>
                     <p>User ID: <?php echo htmlspecialchars($user['id']); ?></p>
+
+                    <!-- Avatar Image -->
+                    <div>
+                        <img src="<?= $avatarUrl ?>" alt="Avatar" class="avatar">
+                    </div>
+
                     <?php if (!empty($user['bio'])): ?>
                         <p>Bio: <?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
                     <?php endif; ?>

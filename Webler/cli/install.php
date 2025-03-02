@@ -6,9 +6,9 @@ require_once __DIR__ . '/../../config.php';
 try {
     // Create a PDO instance (connect to the database)
     $pdo = new PDO($CFG->dbDSN, $CFG->dbUser, $CFG->dbPassword, [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES   => false,
+        PDO::ATTR_EMULATE_PREPARES => false,
     ]);
 
     // SQL statement to create the users table if it does not exist
@@ -25,7 +25,7 @@ try {
     echo "Table 'users' created or already exists.\n";
 
     // Check and add new columns to the users table if they do not exist
-    $addColumnSql = function($tableName, $columnName, $columnDefinition) use ($pdo) {
+    $addColumnSql = function ($tableName, $columnName, $columnDefinition) use ($pdo) {
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS 
                               WHERE TABLE_NAME = :tableName AND COLUMN_NAME = :columnName");
         $stmt->execute([':tableName' => $tableName, ':columnName' => $columnName]);
@@ -39,6 +39,7 @@ try {
 
     $addColumnSql('users', 'name', "name VARCHAR(255)");
     $addColumnSql('users', 'is_active', "is_active TINYINT(1) NOT NULL DEFAULT 1");
+    $addColumnSql('users', 'is_iterable', "is_iterable TINYINT(1) NOT NULL DEFAULT 1");
 
     $pdo->exec("DROP TABLE IF EXISTS tokens");
     echo "Table 'tokens' deleted if exists.\n";
@@ -79,7 +80,7 @@ try {
         $insert->execute([
             ':email' => $CFG->adminEmail,
             ':password' => $hashedPassword,
-            ':is_admin' => 1
+            ':is_admin' => 1,
         ]);
 
         echo "Admin account created.\n";
@@ -87,10 +88,10 @@ try {
         echo "Admin account already exists.\n";
     }
 
-    // Update the admin user's name to WeblerCodes
-    $updateName = $pdo->prepare("UPDATE users SET name = :name WHERE email = :email");
+    $updateName = $pdo->prepare("UPDATE users SET name = :name, is_iterable = :is_iterable WHERE email = :email");
     $updateName->execute([
         ':name' => 'WeblerCodes',
+        ':is_iterable' => 0,
         ':email' => $CFG->adminEmail
     ]);
 
@@ -106,13 +107,13 @@ try {
         contenthash VARCHAR(255) NOT NULL,
         pathnamehash VARCHAR(255) NOT NULL UNIQUE
     )";
-    
+
     $pdo->exec($sqlFiles);
     echo "Table 'files' created or already exists.\n";
 
 } catch (\PDOException $e) {
     // Handle connection errors
-    throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    throw new \PDOException($e->getMessage(), (int) $e->getCode());
 }
 
 ?>

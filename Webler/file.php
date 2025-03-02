@@ -12,7 +12,7 @@ if($file == null) {
     exit();
 }
 
-$mimeType = $file['mimetype'];
+$mimetype = $file['mimetype'];
 $filesize = $file['filesize'];
 
 if ($mimetype === 'text/plain') {

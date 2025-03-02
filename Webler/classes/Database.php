@@ -257,7 +257,7 @@ class Database
         return (int) $stmt->fetch(PDO::FETCH_ASSOC)['count'];
     }
 
-    public function count_sql($table, $filters)
+    public function count_sql($sql)
     {
         $stmt = $this->pdo->query($sql);
         return (int) $stmt->fetch(PDO::FETCH_ASSOC)['count'];
@@ -267,4 +267,4 @@ class Database
 unset($DB);
 global $DB;
 
-$DB = new Database($CFG);
+$DB = new Database();
