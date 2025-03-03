@@ -166,7 +166,7 @@ class UserController extends Controller
     public function getAvatarUrl($user)
     {
         $fs = Filestorage::get();
-        return $fs->fileExists("/avatars", $user["id"] . ".png") ? "/Webler/file.php?path=/avatars/avatar.png" : "/Webler/assets/images/logo.png";
+        return $fs->fileExists("/avatars", $user["id"] . ".png") ? "/Webler/file.php?path=/avatars/" . $user["id"] . ".png" : "/Webler/assets/images/logo.png";
     }
 
     public function updateAvatar($user, $avatar)
