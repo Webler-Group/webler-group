@@ -164,7 +164,7 @@ sudo apt install libapache2-mod-php
 ```
 
 ```
-sudo apt-get install php-gd
+sudo apt-get install php-gd php-mysql
 ```
 
 First, verify if the files /etc/apache2/mods-enabled/php8.*.conf and /etc/apache2/mods-enabled/php8.*.load exist. If they do not exist, you can enable the module using the a2enmod command.
